@@ -12,5 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('thumbnails');
 });
+
+Route::post('/api/add', 'Thumbnail@addNew');
