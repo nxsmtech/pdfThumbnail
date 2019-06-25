@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}" />
+    <meta name="csrf-token" content="{{ csrf_token() }}"/>
 
     <title>Upload Files</title>
     <!-- Fonts -->
@@ -82,6 +82,10 @@
         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">
             Add
         </button>
+
+        <div id="thumbnails">
+            <span id="uploaded_file"></span>
+        </div>
     </div>
 </div>
 
@@ -99,14 +103,15 @@
             </div>
             <div class="modal-body">
 
-                <form method="post" enctype="multipart/form-data">
-                    <input type="file" name="files[]" multiple/>
+                <div class="alert" id="message" style="display: none"></div>
+                <form method="post" enctype="multipart/form-data" id="upload_form">
+                    <input type="file" name="select_file" id="select_file"/>
                 </form>
-
             </div>
+
             <div class="modal-footer">
+                <button type="submit" name="upload" id="upload" class="btn btn-primary">Upload</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button id="uploadFile" type="button" class="btn btn-primary">Save</button>
             </div>
         </div>
     </div>
@@ -115,23 +120,38 @@
 </body>
 
 <script>
-    $( "#uploadFile" ).click(function() {
-        const url = '/api/add';
+    $(document).ready(function () {
 
-        const files = document.querySelector('[type=file]').files;
-        const formData = new FormData();
-
-        for (let i = 0; i < files.length; i++) {
-            let file = files[i];
-
-            formData.append('files[]', file)
-        }
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
+        $('#upload').on('click', function () {
+            $('#upload_form').submit();
         });
-        $.post(url);
+
+        $('#upload_form').on('submit', function (event) {
+            event.preventDefault();
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax({
+                url: "{{ route('api.add') }}",
+                method: "POST",
+                data: new FormData(this),
+                dataType: 'JSON',
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function (data) {
+                    $('#message').css('display', 'block');
+                    $('#message').html(data.message);
+                    $('#message').addClass(data.class_name);
+                    $('#uploaded_file').html(data.uploaded_file);
+                }
+            })
+        });
+
     });
 
 </script>
