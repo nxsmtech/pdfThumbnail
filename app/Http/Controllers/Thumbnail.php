@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Imagick;
 
 class Thumbnail extends Controller
 {
@@ -25,9 +24,8 @@ class Thumbnail extends Controller
             $new_name = $file->getClientOriginalName();
             $file->move(public_path('files'), $new_name);
             try {
-                $im = new Imagick();
-                $im->readImage(public_path('files') . '\06062019-164145.pdf');
-                $im->destroy();
+                $out = exec('convert files/test.pdf[0] files/test.jpg');
+                echo $out;
             } catch (\Exception $e) {
                 return response()->json([
                     'message' => $e->getMessage()
