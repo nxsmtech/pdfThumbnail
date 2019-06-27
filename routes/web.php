@@ -17,3 +17,4 @@ Route::get('/', function () {
 
 Route::get('/api', 'Thumbnail@index');
 Route::post('/api/add', 'Thumbnail@addNew')->name('api.add');
+Route::get('api/pdf-document/{id}', 'Thumbnail@getDocument');

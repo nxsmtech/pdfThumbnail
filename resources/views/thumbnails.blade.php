@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" xmlns:scrolling="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -83,7 +83,11 @@
             Add
         </button>
 
-        <div id="thumbnails">
+        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#documentModal">
+            Open
+        </button>
+
+        <div id="thumbnails" style="margin-top: 20px">
             <span id="uploaded_file"></span>
         </div>
     </div>
@@ -101,8 +105,8 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
 
+            <div class="modal-body">
                 <div class="alert" id="message" style="display: none"></div>
                 <form method="post" enctype="multipart/form-data" id="upload_form">
                     <input type="file" name="select_file" id="select_file"/>
@@ -113,6 +117,25 @@
                 <button type="submit" name="upload" id="upload" class="btn btn-primary">Upload</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="documentModal" tabindex="-1" role="dialog" aria-labelledby="documentModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <?php
+                $id = 'document.pdf';
+            ?>
+            <object type="application/pdf"
+                    data="{{ action('Thumbnail@getDocument', ['id'=> $id]) }}?#zoom=85&scrollbar=0&toolbar=0&navpanes=0"
+                    style="width:600px; height:800px;"
+                    frameborder="0"
+            >
+            </object>
         </div>
     </div>
 </div>
@@ -128,6 +151,10 @@
 
         $('#upload_form').on('submit', function (event) {
             event.preventDefault();
+
+            $('#message').css('display', 'none');
+            $('#message').html('');
+            $('#message').addClass('');
 
             $.ajaxSetup({
                 headers: {
@@ -147,7 +174,7 @@
                     $('#message').css('display', 'block');
                     $('#message').html(data.message);
                     $('#message').addClass(data.class_name);
-                    $('#uploaded_file').html(data.uploaded_file);
+                    $('#uploaded_file').prepend(data.uploaded_file);
                 }
             })
         });
