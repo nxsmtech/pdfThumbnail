@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 
@@ -11,34 +11,28 @@ class Thumbnail extends Controller
 {
     public function index()
     {
-        return view('thumbnails');
+        $path = public_path('files/thumbnails');
+        $thumbnails = array();
+        if (file_exists($path)) {
+            $thumbnails = File::allFiles($path);
+        }
+
+        return view('thumbnails')->with('thumbnails', $thumbnails);
     }
 
-    public function getDocument($id)
+    public function getDocument($name)
     {
-//        $document = Document::findOrFail($id);
-//
-//        $filePath = $document->file_path;
-//
-//        // file not found
-//        if( ! Storage::exists($filePath) ) {
-//            abort(404);
-//        }
+        $path = public_path('files/pdf') . '/' . $name;
 
-//        $pdfContent = Storage::get($filePath);
+        if (!File::exists($path)) {
+            abort(404);
+        }
 
+        try {
 
-        $fileName = 'document.pdf';
-        $path = storage_path('app\public\pdf\document.pdf');
-
-//        // for pdf, it will be 'application/pdf'
-//        $type       = Storage::mimeType($path);
-//        $fileName   = Storage::name($path);
-
-        return Response::make(file_get_contents($path), 200, [
-            'Content-Type'        => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="'.$fileName.'"'
-        ]);
+        } catch (\Exception $exception) {
+            echo $exception->getMessage();
+        }
     }
     
     public function addNew(Request $request)
