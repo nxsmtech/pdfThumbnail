@@ -11,10 +11,5 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('/api', 'Thumbnail@index');
+Route::get('/', 'Thumbnail@index')->name('main');
 Route::post('/api/add', 'Thumbnail@addNew')->name('api.add');
-Route::get('api/pdf-document/{id}', 'Thumbnail@getDocument');
