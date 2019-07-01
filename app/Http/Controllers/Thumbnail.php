@@ -59,7 +59,7 @@ class Thumbnail extends Controller
 
             return response()->json([
                 'message' => 'Uploaded successfully',
-                'uploaded_file' => '<img src="/files/thumbnails/' . $imgName[0] . '.jpg' . '" class="img-thumbnail" width="300" />',
+                'uploaded_file' => '<div class="thumbnail"><img src="/files/thumbnails/' . $imgName[0] . '.jpg' . '" class="img-thumbnail" width="300" /></div>',
                 'class_name' => 'alert-success'
             ]);
         } else {
