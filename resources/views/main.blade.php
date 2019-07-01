@@ -63,7 +63,7 @@
 
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
     <a class="navbar-brand" href="{{ route('main') }}">Thumbnails</a>
-    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#uploadModal">
+    <button type="button" id="addBtn" class="btn btn-success" data-toggle="modal" data-target="#uploadModal">
         Add new
     </button>
 </nav>
@@ -156,6 +156,12 @@
                 })
             }
         })(jQuery);
+
+        $('#addBtn').on('click', function () {
+            $('#message').css('display', 'none');
+            $('#message').html('');
+            $('#message').removeClass();
+        });
 
         $("body").on('click', '.view-pdf', function () {
             const pdf_link = $(this).attr('href');
